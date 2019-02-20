@@ -12,6 +12,7 @@
         <title>JSP expresiones</title>
     </head>
     <body>
+        <%@include file="cabecera.jsp" %>
         <h1>Expresiones JSP</h1>
         <!-- Mostrar la fecha y la hora actual -->
         <%= new java.util.Date().toString() %> <br/>

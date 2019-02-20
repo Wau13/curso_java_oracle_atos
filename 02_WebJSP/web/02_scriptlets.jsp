@@ -11,6 +11,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Scriplets JSP</title>
     <body style="background-color:  grey;">
+        <%@include file="cabecera.jsp" %>
         <h1>Scriplets JSP</h1>
         <% 
             int numero = 7, factorial = 1;

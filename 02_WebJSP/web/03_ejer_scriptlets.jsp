@@ -12,6 +12,7 @@
         <title>JSP tabla del 7</title>
     </head>
     <body>
+        <%@include file="cabecera.jsp" %>
         <h1>Tablas de multiplicar</h1>
         <%! int i, e; %>
         <%
