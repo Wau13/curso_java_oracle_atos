@@ -12,13 +12,18 @@
         <title>JSP tabla del 7</title>
     </head>
     <body>
+        <h1>Tablas de multiplicar</h1>
+        <%! int i, e; %>
         <%
-        for (int e = 1; e <= 10; e ++){
+        for (/*int */e = 1; e <= 10; e ++){
         %>
-        <h1>Tabla del <%= e %> </h1>
-        <%-- Muesta una tabla con su TRs y TDs de la tabla de multiplicar del 7 con jsp--%>
-        <table style="border: 4px double blue; display: inline-block ">
-            <% for (int i = 1; i <= 10; i++){ %>
+        <%-- Muesta una tabla con su TRs y TDs de la tabla de multiplicar del 7 con jsp --%>
+        <table style="border: 4px double blue; display: inline-block; ">
+            
+            <th>
+            <td><h1>Tabla del <%= e %> </h1></td>
+            </th>
+            <% for (/*int*/ i = 1; i <= 10; i++){ %>
             <tr>
                 <td><%= e %> por</td>
                 <td><%= i %></td>
