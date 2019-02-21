@@ -11,7 +11,8 @@
             String email = request.getParameter("email");
             String contraseña = request.getParameter("psswd");
             
-            Cookie tePersigo = new Cookie("persiguiendote", request.getParameter(email));
+            Cookie  cook = new Cookie("cook", request.getParameter(email));
+            response.addCookie(cook);
 %>             
 <!DOCTYPE html>
 <html>
@@ -20,7 +21,7 @@
         <title></title>
     </head>
     <body>
-        <% out.println(nombre + edad + email + contraseña);%>
+        <% out.println(nombre + edad + email + contraseña + cook);%>
         
     </body>
 </html>
