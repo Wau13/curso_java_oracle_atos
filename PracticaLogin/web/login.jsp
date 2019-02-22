@@ -1,6 +1,6 @@
 <%-- 
-    Document   : registro
-    Created on : 21-feb-2019, 16:49:59
+    Document   : login
+    Created on : 22-feb-2019, 12:08:39
     Author     : USUARIO
 --%>
 
@@ -9,16 +9,17 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Registro</title>
+        <title>Login</title>
     </head>
     <body>
-        <h4>Rellena este formulario para ser un nuevo usuario:</h4>
-        <form action="procesar.do" method="post">
-            nombre: <input id="nombre" type="text" name="nombre" value=""/><br/>
+        <h4>Accede a mi pagina</h4>
+        <form action="procesar.do" method="get">
+            
             email: <input id="email" type="text" name="email" value=""/><br/>
             contraseña: <input id="pass" name="pass" type="text" value=""/><br/>
-            edad: <input id="edad" type="text" name="edad" value=""/><br/>
+            
             <input type="submit" value="Enviar"/>
         </form>
+        
     </body>
 </html>

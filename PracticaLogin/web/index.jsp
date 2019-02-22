@@ -16,6 +16,6 @@
         <h3>¿Eres nuevo?</h3>
         <a href="registro.jsp">Registrate</a>
         <h3>¿Ya eres usuario?</h3>
-        <a href="">Accede</a>
+        <a href="login.jsp">Accede</a>
     </body>
 </html>
