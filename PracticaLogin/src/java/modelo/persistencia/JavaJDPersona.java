@@ -75,11 +75,11 @@ public class JavaJDPersona implements IPersonaDAO{
     }
 
     @Override
-    public Persona borrarPersona() {
+    public Persona borrarPersona(String email) {
         try (Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/login",
                 "usuario", "usuario")) {
             
-            String squery = "DELETE FROM login where email ="  ;
+            String squery = "DELETE FROM login where email = '"+email+"'" ;
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery(squery);
             return null;

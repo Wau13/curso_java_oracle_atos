@@ -24,6 +24,9 @@ public class Persona implements Serializable{
         this.pass = pass;
         this.edad = edad;
     }
+    public Persona(String email){
+        this.email = email;
+    }
 
     public String getNombre() {
         return nombre;

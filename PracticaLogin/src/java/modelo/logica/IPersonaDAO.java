@@ -17,7 +17,7 @@ public interface IPersonaDAO {
     
     Persona leerPersona();
     
-    Persona borrarPersona();
+    Persona borrarPersona(String email);
     
     
     

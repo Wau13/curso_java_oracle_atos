@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import modelo.Persona;
 import modelo.logica.GestionPersona;
+import modelo.persistencia.JavaJDPersona;
 import org.apache.derby.shared.common.error.ExceptionSeverity;
 
 /**
@@ -20,7 +21,8 @@ import org.apache.derby.shared.common.error.ExceptionSeverity;
  * @author USUARIO
  */
 public class Procesar extends HttpServlet {
-
+    JavaJDPersona jd = new JavaJDPersona();
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -78,7 +80,19 @@ public class Procesar extends HttpServlet {
     @Override
     protected void doDelete (HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        
+        
         String email = request.getParameter("email");
+        
+        Persona persona = jd.borrarPersona(email);
+        
+        if(persona != null){
+            
+        }else{
+            
+        }
+        
+        
         
         
         
