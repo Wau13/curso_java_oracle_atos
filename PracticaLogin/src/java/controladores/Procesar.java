@@ -6,12 +6,14 @@
 package controladores;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import modelo.Persona;
 import modelo.logica.GestionPersona;
+import org.apache.derby.shared.common.error.ExceptionSeverity;
 
 /**
  *
@@ -27,6 +29,10 @@ public class Procesar extends HttpServlet {
          String pass = request.getParameter("pass");
         String edad = request.getParameter("edad");
         
+        
+        
+        
+       
         GestionPersona.TipoResultado resultado;
         resultado = GestionPersona.getInstancia().guardarPersona(nombre, email, pass, edad);
         switch (resultado) {
@@ -40,7 +46,7 @@ public class Procesar extends HttpServlet {
                 break;
             case EDAD_MAL:
                 request.getRequestDispatcher("errornumero.jsp").forward(request, response);
-                break;
+                break; 
             case ERR_IO:
                 request.getRequestDispatcher("errorio.jsp").forward(request, response);
                 break;
@@ -56,13 +62,28 @@ public class Procesar extends HttpServlet {
         String email = request.getParameter("email");
         String pass = request.getParameter("pass");
         
+        Persona persona = GestionPersona.getInstancia().getPersona() ;
         
-
+        String compem = persona.getEmail();
+        String compas = persona.getPass();
+        
+        if (email.equals(compem) && pass.equals(compas)){
+                 
+                request.getRequestDispatcher("pagina.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("errorcampos.jsp").forward(request, response);
+        }
     }
     
-    
+    @Override
+    protected void doDelete (HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        String email = request.getParameter("email");
         
-    
+        
+        
+        
+    }
 
 
     @Override

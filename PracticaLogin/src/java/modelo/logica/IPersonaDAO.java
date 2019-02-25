@@ -17,6 +17,8 @@ public interface IPersonaDAO {
     
     Persona leerPersona();
     
+    Persona borrarPersona();
+    
     
     
 }

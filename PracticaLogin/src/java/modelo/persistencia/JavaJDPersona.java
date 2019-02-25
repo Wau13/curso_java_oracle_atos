@@ -57,7 +57,7 @@ public class JavaJDPersona implements IPersonaDAO{
     public Persona leerPersona() {
         try (Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/login",
                 "usuario", "usuario")) {
-            String squery = "SELECT * FROM login ORDER BY id DESC";
+            String squery = "SELECT * FROM login";
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery(squery);
             if (res.next()) {   // Cogemos cualquier persona (última o la primera...)
@@ -73,6 +73,28 @@ public class JavaJDPersona implements IPersonaDAO{
             return null;
         }
     }
+
+    @Override
+    public Persona borrarPersona() {
+        try (Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/login",
+                "usuario", "usuario")) {
+            
+            String squery = "DELETE FROM login where email ="  ;
+            Statement stmt = con.createStatement();
+            ResultSet res = stmt.executeQuery(squery);
+            return null;
+        } catch (SQLException ex) {
+            return null;
+        }
+            
+        
+    }
+
+    
+    
+        
+    
+    
     
     
     }
