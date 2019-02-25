@@ -7,6 +7,7 @@ package modelo.persistencia;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,27 +39,19 @@ public class DerbyDBUsuario implements IUsuarioDAO {
         try (Connection con = DriverManager.getConnection(
                 Constantes.CONEX_DERBY_DB,Constantes.USUARIO_DERBY_DB,Constantes.PASSWD_DERBY_DB )) {
             
-            String squery = "SELECT COUNT(Id) as ultId FROM usuario";
+            String squery  = "INSERT INTO usuario (Nombre, Edad, email, password) VALUES(" 
+                        + "'" + persona.getNombre() + "', "
+                        + persona.getEdad() + ", '" + persona.getEmail() + "', '" + persona.getPassword() + "')";
             Statement stmt = con.createStatement();
-            ResultSet res = stmt.executeQuery(squery);
-            if (res.next()) { 
-                int ultId = res.getInt("ultId");
-                ultId++; // Nuestro autoincrement
-                squery = "INSERT INTO usuario (Nombre, Edad, email, password) VALUES(" 
-                        +  " '" + persona.getNombre() + "', "
-                        + persona.getEdad() + ", '" + persona.getEmail() + "', '" + persona.getPass() + "')";
-                stmt = con.createStatement();
-                stmt.executeUpdate(squery);
-                return true;
-            }
-            return false;
+            stmt.executeUpdate(squery);
+            return true;
         } catch (SQLException ex) {
             return false;
         }
     }
 
     @Override
-    public ArrayList<Usuario> listar() {
+    public ArrayList<Usuario> obtenerTodos() {
         try (Connection con = DriverManager.getConnection(
                 Constantes.CONEX_DERBY_DB,Constantes.USUARIO_DERBY_DB,Constantes.PASSWD_DERBY_DB )) {
             
@@ -82,7 +75,7 @@ public class DerbyDBUsuario implements IUsuarioDAO {
     }
 
     @Override
-    public Usuario obtenerUno(int id) {
+    public Usuario obtenerUno(Integer id) {
         try (Connection con = DriverManager.getConnection(
                 Constantes.CONEX_DERBY_DB,Constantes.USUARIO_DERBY_DB,Constantes.PASSWD_DERBY_DB )) {
             
@@ -104,12 +97,64 @@ public class DerbyDBUsuario implements IUsuarioDAO {
     }
 
     @Override
-    public boolean eliminar(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Usuario obtenerUno(String email) {
+       
+        try (Connection con = DriverManager.getConnection(
+                Constantes.CONEX_DERBY_DB,Constantes.USUARIO_DERBY_DB,Constantes.PASSWD_DERBY_DB )) {
+            
+            Usuario usu = null;
+            String squery = "SELECT id,nombre, edad, email, password FROM Usuario WHERE Id= '" + email + "'";
+            Statement stmt = con.createStatement();
+            ResultSet res = stmt.executeQuery(squery);
+            if (res.next()) { 
+                int id = res.getInt("id");
+                String nombre = res.getString("nombre");
+                int edad = res.getInt("edad");
+                // String email = res.getString("email");
+                String password = res.getString("password");
+                usu = new Usuario(id, nombre, edad, email, password);
+            }
+            return usu;
+        } catch (SQLException ex) {
+            return null;
+        }
+    }
+    
+
+    @Override
+    public boolean eliminar(String email) {
+        try (Connection con = DriverManager.getConnection(
+                Constantes.CONEX_DERBY_DB,Constantes.USUARIO_DERBY_DB,Constantes.PASSWD_DERBY_DB )) {
+            String squery = "DELETE FROM usuario WHERE email=?";
+            PreparedStatement stmt = con.prepareStatement(squery);
+            stmt.setString(1, email);
+            stmt.executeUpdate(squery);
+
+            return true;
+        } catch (SQLException ex){
+            return false;
+        }
+        
     }
 
     @Override
-    public boolean modificar(Usuario persona) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean modificar(Usuario usuario) {
+        try (Connection con = DriverManager.getConnection(
+                Constantes.CONEX_DERBY_DB,Constantes.USUARIO_DERBY_DB,Constantes.PASSWD_DERBY_DB )) {
+            String squery = "UPDATE usuario SET nombre=?, edad=?, email=?, password=? WHERE id=?";
+            PreparedStatement stmt = con.prepareStatement(squery);
+            stmt.setString(1, usuario.getNombre());
+            stmt.setInt(2, usuario.getEdad());
+            stmt.setString(3, usuario.getEmail());
+            stmt.setString(4, usuario.getPassword());
+            stmt.setInt(5, usuario.getId());
+            stmt.executeUpdate(squery);
+
+            return true;
+        } catch (SQLException ex){
+            return false;
+        }
     }
+    
+
 }

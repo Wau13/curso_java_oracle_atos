@@ -15,29 +15,74 @@ import modelo.persistencia.DerbyDBUsuario;
  */
 public class ServicioUsuarios {
 
-    IUsuarioDAO persistencia = new DerbyDBUsuario();
-    public enum Resultado { Ok, CamposMal, NoLogin };
+    IUsuarioDAO persistencia ;
+    public enum Resultado { Ok, CamposMal, NoLogin, ErrorDB };
     private static final ServicioUsuarios instancia = new ServicioUsuarios();
-    private ServicioUsuarios() {}
+    private ServicioUsuarios() {
+        persistencia = new DerbyDBUsuario();
+    }
 
     public static ServicioUsuarios getInstancia() {
         return instancia;
     }
-
-    public Resultado add(String nom, String strEdad, String email, String passwd) {
-
+    
+    public Usuario crearUsuarioValido(int id, String nom, String strEdad, String email, String password) {
         int iEdad = 0;
         if (strEdad.matches("^[1-9][0-9]*$")) {
             try {
                 iEdad = Integer.parseInt(strEdad);
-                return this.add(nom, iEdad, email, passwd);
+                
+                if (iEdad > 18){
+                    if (email.matches("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$"))
+                        return new Usuario(id, nom, iEdad, email, password);
+                }
             } catch (NumberFormatException ex) {
+            }
+        }
+        return null;
+    }
+
+    public Resultado add(String nom, String strEdad, String email, String passwd) {
+
+        Usuario nuevoUsu = crearUsuarioValido(0, nom, strEdad, email, passwd);
+        if (nuevoUsu != null) {
+            if (this.persistencia.crear(nuevoUsu)){
+                return Resultado.Ok;
+            } else {
+                return Resultado.ErrorDB;
             }
         }
         return Resultado.CamposMal;
     }
+    
+    public ArrayList<Usuario> obtenerTodos() {
+        return null;
+    }
+    
+    public Resultado modificar( String nom, String strEdad, String email, String passwd){
+        
+        Usuario nuevoUsu = crearUsuarioValido(0, nom, strEdad, email, passwd);
+        if (nuevoUsu != null) {
+            if (this.persistencia.crear(nuevoUsu)){
+                return Resultado.Ok;
+            } else {
+                return Resultado.ErrorDB;
+            }
+        }
+        return Resultado.CamposMal;
+        
+    }
+    
+    public Resultado eliminar(String email){
+        return Resultado.CamposMal;
+    }
+    
+    public Resultado validarLoginUsuario(String email, String passwd ){
+        
+        return Resultado.NoLogin;
+    }
 
-    public Resultado add(String nom, int edad, String email, String passwd) {
+    /*public Resultado add(String nom, int edad, String email, String passwd) {
 
         if ( !nom.isEmpty() && edad > 18 && email != "" && passwd != "") {
             Usuario nuevoUsu = new Usuario(0, nom, edad, email, passwd);
@@ -47,12 +92,17 @@ public class ServicioUsuarios {
             return Resultado.CamposMal;
         }
     }
+    */
     public ArrayList<Usuario> listar() {
-        return persistencia.listar();
+        return persistencia.obtenerTodos();
+    }
+    
+    public Usuario obtenerUno(String email){
+        return null;
     }
 
     public Usuario validacionPasswd(String email, String passwd) {
-        ArrayList<Usuario> todosUsuarios = persistencia.listar();
+        ArrayList<Usuario> todosUsuarios = persistencia.obtenerTodos();
         for (Usuario usuario : todosUsuarios) {
             if (usuario.getEmail().equals(email) && usuario.getPassword().equals(passwd)) {
                 return usuario;

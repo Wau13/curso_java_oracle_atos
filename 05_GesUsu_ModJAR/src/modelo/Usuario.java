@@ -54,7 +54,7 @@ public class Usuario implements Serializable {
         this.id = id;
         this.nombre = nombre;
         this.edad = edad;
-        this.email= email;
+        this.email = email;
         this.password = password;
     }
 
