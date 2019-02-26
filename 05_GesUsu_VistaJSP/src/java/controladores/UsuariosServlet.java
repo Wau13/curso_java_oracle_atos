@@ -53,6 +53,7 @@ public class UsuariosServlet extends HttpServlet {
         
         if(ServicioUsuarios.getInstancia().validarLoginUsuario(email, password) == ServicioUsuarios.Resultado.Ok){
            usuario = ServicioUsuarios.getInstancia().obtenerUno(email);
+           request.getSession().setAttribute("usuario", usuario);
            // Usuario se esta logueando bien
            Cookie cookie_email = new Cookie("email", email);
            Cookie cookie_password = new Cookie("password", password);
@@ -80,6 +81,7 @@ public class UsuariosServlet extends HttpServlet {
                    break;   
            }
         } else { //Cuando no ha hecho el login
+            request.getSession().setAttribute("usuario", usuario);
             switch(request.getMethod()){
                 case "POST":
                     resultado = ServicioUsuarios.getInstancia().add(nom, edad, email, password);
@@ -106,6 +108,7 @@ public class UsuariosServlet extends HttpServlet {
             }
             
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
