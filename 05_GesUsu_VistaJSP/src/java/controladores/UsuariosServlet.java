@@ -9,9 +9,11 @@ import modelo.logica.ServicioUsuarios;
 import util.*;
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelo.Usuario;
 
 /**
  *
@@ -38,6 +40,72 @@ public class UsuariosServlet extends HttpServlet {
         String edad = request.getParameter("edad");
         String p_email = request.getParameter("email");
         String p_password = request.getParameter("password");
+        
+        String ck_email = Utilidades.getCookie(request, "email");
+        String ck_password = Utilidades.getCookie(request, "password");
+        
+        //Seleccionar los campos de logn de los parametros o de las cookies
+        
+        String email = p_email != null && !p_email.isEmpty() ? p_email : ck_email;
+        String password = p_password != null && !p_password.isEmpty() ? p_password : ck_password;
+        
+        Usuario usuario = null;
+        
+        if(ServicioUsuarios.getInstancia().validarLoginUsuario(email, password) == ServicioUsuarios.Resultado.Ok){
+           usuario = ServicioUsuarios.getInstancia().obtenerUno(email);
+           // Usuario se esta logueando bien
+           Cookie cookie_email = new Cookie("email", email);
+           Cookie cookie_password = new Cookie("password", password);
+           response.addCookie(cookie_email);
+           response.addCookie(cookie_password);
+           
+           switch (request.getMethod()) {
+               case "GET":
+                   if (email.isEmpty()) // Si no pide usuario, mostramos todos
+                       request.getRequestDispatcher("listar.jsp").forward(request, response);
+                   else request.getRequestDispatcher("index.jsp").forward(request, response);
+                   break;
+                case "POST":
+                    String metodo = request.getParameter("method");//input hidden
+                    switch(metodo){
+                        case "PUT":
+                            ServicioUsuarios.getInstancia().modificar(id, nom, edad, email, password);
+                            request.getRequestDispatcher("listar.jsp").forward(request, response);
+                            break;
+                        case "DELETE":
+                            ServicioUsuarios.getInstancia().eliminar(email);
+                            request.getRequestDispatcher("listar.jsp").forward(request, response);
+                            break;
+                    }
+                   break;   
+           }
+        } else { //Cuando no ha hecho el login
+            switch(request.getMethod()){
+                case "POST":
+                    resultado = ServicioUsuarios.getInstancia().add(nom, edad, email, password);
+                    switch(resultado){
+                        case Ok:
+                            usuario = ServicioUsuarios.getInstancia().obtenerUno(email);
+                            request.getSession().setAttribute("usuario", usuario); //Guardamos un java bean
+                            request.getRequestDispatcher("registrado.jsp").forward(request, response);
+                            break;
+                        case CamposMal:
+                            request.getSession().setAttribute("mensajeError", "Los campos no son correctos");
+                            request.getRequestDispatcher("registrase.jsp").forward(request, response);
+                            break;
+                        case ErrorDB:
+                            request.getSession().setAttribute("mensajeError", "Error en BBDD");
+                            request.getRequestDispatcher("registrase.jsp").forward(request, response);
+                            break;
+                    }
+                    break;
+                default://Si intentamos logueranos o cualquier otra cosa y el login ha fallado...
+                    request.getSession().setAttribute("mensajeError", "Login invalido");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                    break;
+            }
+            
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
