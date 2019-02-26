@@ -38,7 +38,7 @@ public class Main {
     
     static void listar() {
         ArrayList<Usuario> todos = ServicioUsuarios.getInstancia().obtenerTodos();
-        System.out.println("");
+        System.out.println("Todos los registros:");
         
         
         todos.stream().forEach((u) -> {
@@ -87,21 +87,19 @@ public class Main {
                 ServicioUsuarios.getInstancia().add("cc cc", "44", "cc@cc.cc","cc"),
         "Usuario  valido");
         
-        listar();
         
         mostrarResultado(
                 ServicioUsuarios.getInstancia().add("cc cc", "44", "cc@cc.cc","cc"),
-        "Usuario  modificar");
+        "Usuario  repetido");
         
-        mostrarResultado(
-                ServicioUsuarios.getInstancia().modificar("cc cc", "55", "cc@cc.cc","cc"),
-        "Usuario  modificar");
+       
+        listar();
         
         Usuario usu = ServicioUsuarios.getInstancia().obtenerUno("cc@cc.cc");
         
-       /* mostrarResultado(
-                ServicioUsuarios.getInstancia().modificar(usu.getId() ,"cc cc", "55", "cc@cc.cc","cc"),
-        "Usuario  repetido"); */
+        mostrarResultado(
+                ServicioUsuarios.getInstancia().modificar(usu.getId() ,"dd dd", "55", "dd@dd.dd","dd"),
+        "Usuario  modificado"); 
         
         mostrarResultado(
                 ServicioUsuarios.getInstancia().validarLoginUsuario("bb@bb.bb", "aa"),
@@ -112,6 +110,9 @@ public class Main {
                 ServicioUsuarios.getInstancia().validarLoginUsuario("bb@bb.bb", "bb"),
         "Usuario  validarLoginUsuario");
         
+                listar();
+
+        
         mostrarResultado(
                 ServicioUsuarios.getInstancia().eliminar("bb@bb.bb"),
         "Usuario  eliminar");
@@ -121,7 +122,7 @@ public class Main {
         "Usuario  eliminar");
         
         mostrarResultado(
-                ServicioUsuarios.getInstancia().eliminar("cc@cc.cc"),
+                ServicioUsuarios.getInstancia().eliminar("dd@dd.dd"),
         "Usuario  eliminar");
         
         listar();

@@ -103,7 +103,7 @@ public class DerbyDBUsuario implements IUsuarioDAO {
                 Constantes.CONEX_DERBY_DB,Constantes.USUARIO_DERBY_DB,Constantes.PASSWD_DERBY_DB )) {
             
             Usuario usu = null;
-            String squery = "SELECT id,nombre, edad, email, password FROM Usuario WHERE Id= '" + email + "'";
+            String squery = "SELECT id, nombre, edad, email, password FROM Usuario WHERE email = '" + email + "'";
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery(squery);
             if (res.next()) { 
@@ -128,7 +128,7 @@ public class DerbyDBUsuario implements IUsuarioDAO {
             String squery = "DELETE FROM usuario WHERE email=?";
             PreparedStatement stmt = con.prepareStatement(squery);
             stmt.setString(1, email);
-            stmt.executeUpdate(squery);
+            stmt.executeUpdate();
 
             return true;
         } catch (SQLException ex){
@@ -148,7 +148,7 @@ public class DerbyDBUsuario implements IUsuarioDAO {
             stmt.setString(3, usuario.getEmail());
             stmt.setString(4, usuario.getPassword());
             stmt.setInt(5, usuario.getId());
-            stmt.executeUpdate(squery);
+            stmt.executeUpdate();
 
             return true;
         } catch (SQLException ex){

@@ -27,9 +27,10 @@ public class ServicioUsuarios {
     }
     
     public Usuario crearUsuarioValido(int id, String nom, String strEdad, String email, String password) {
-        int iEdad = 0;
+        if (!nom.isEmpty() && !strEdad.isEmpty() && !email.isEmpty() && !password.isEmpty()){
         if (strEdad.matches("^[1-9][0-9]*$")) {
-            try {
+            try{ 
+                int iEdad = 0;
                 iEdad = Integer.parseInt(strEdad);
                 
                 if (iEdad > 18){
@@ -38,7 +39,7 @@ public class ServicioUsuarios {
                 }
             } catch (NumberFormatException ex) {
             }
-        }
+        }}
         return null;
     }
 
@@ -56,14 +57,14 @@ public class ServicioUsuarios {
     }
     
     public ArrayList<Usuario> obtenerTodos() {
-        return null;
+        return persistencia.obtenerTodos();
     }
     
-    public Resultado modificar( String nom, String strEdad, String email, String passwd){
+    public Resultado modificar(int id, String nom, String strEdad, String email, String passwd){
         
-        Usuario nuevoUsu = crearUsuarioValido(0, nom, strEdad, email, passwd);
+        Usuario nuevoUsu = crearUsuarioValido(id, nom, strEdad, email, passwd);
         if (nuevoUsu != null) {
-            if (this.persistencia.crear(nuevoUsu)){
+            if (this.persistencia.modificar(nuevoUsu)){
                 return Resultado.Ok;
             } else {
                 return Resultado.ErrorDB;
@@ -72,14 +73,23 @@ public class ServicioUsuarios {
         return Resultado.CamposMal;
         
     }
-    
+
     public Resultado eliminar(String email){
-        return Resultado.CamposMal;
+        Usuario usu = this.persistencia.obtenerUno(email);
+        if (usu != null){
+            if (this.persistencia.eliminar(email))
+                return Resultado.Ok;
+            else return Resultado.ErrorDB;
+        }
+        else return Resultado.CamposMal;
     }
-    
+
     public Resultado validarLoginUsuario(String email, String passwd ){
-        
-        return Resultado.NoLogin;
+       Usuario usu = persistencia.obtenerUno(email);
+       if(usu != null && usu.getPassword().equals(passwd))
+           return Resultado.Ok;
+       else return Resultado.NoLogin;
+                   
     }
 
     /*public Resultado add(String nom, int edad, String email, String passwd) {
@@ -98,10 +108,10 @@ public class ServicioUsuarios {
     }
     
     public Usuario obtenerUno(String email){
-        return null;
+        return persistencia.obtenerUno(email);
     }
 
-    public Usuario validacionPasswd(String email, String passwd) {
+    /*public Usuario validacionPasswd(String email, String passwd) {
         ArrayList<Usuario> todosUsuarios = persistencia.obtenerTodos();
         for (Usuario usuario : todosUsuarios) {
             if (usuario.getEmail().equals(email) && usuario.getPassword().equals(passwd)) {
@@ -109,5 +119,5 @@ public class ServicioUsuarios {
             }
         }
         return null;
-    }
+    }*/
 }
