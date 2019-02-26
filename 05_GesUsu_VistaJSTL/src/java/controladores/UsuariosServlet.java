@@ -60,11 +60,12 @@ public class UsuariosServlet extends HttpServlet {
            response.addCookie(cookie_email);
            response.addCookie(cookie_password);
            
+           
            switch (request.getMethod()) {
                case "GET":
-                   if (email.isEmpty()) // Si no pide usuario, mostramos todos
+                       request.getSession().setAttribute("listaUsuarios", ServicioUsuarios.getInstancia().obtenerTodos());
                        request.getRequestDispatcher("listar.jsp").forward(request, response);
-                   else request.getRequestDispatcher("index.jsp").forward(request, response);
+                       request.getRequestDispatcher("index.jsp").forward(request, response);
                    break;
                 case "POST":
                     String metodo = request.getParameter("method");//input hidden

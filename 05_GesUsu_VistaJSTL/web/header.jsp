@@ -29,7 +29,7 @@
         <jsp:getProperty property="*" name="usuario"/>
     </jsp:useBean>
    
-        <a href="listar.jsp">Listar</a>   
+        <a href="usuarios.do">Listar</a>   
         
         <form action="usuarios.do" style="display: inline-block">
             <input id="email" name="email" type="hidden" value="LOGOUT"/>
