@@ -18,16 +18,10 @@
         <sql:query dataSource = "${snapshot}" var = "result">
          SELECT * from usuario
         </sql:query>
-        <!--
         
-        
-            RECORDAR EN SQL DATASOURCE, QUE HAY QUE USAR EL ATRIBUTO sql="..."
-        
-        
-        -->
         <%@include file="header.jsp" %>
-        <h1>Todos los usuarios</h1>
-        <div border="2">
+        <h1>Todos los usuarios con SQL</h1>
+        <div border="4">
             <c:forEach items="${result.rows}" var="row">
                 <form action="usuarios.do" method="post" name="form_${row.id}">                 
                     <input id="id" name="id" type="text"  size="4" readonly="true" value="${row.id}"/>
@@ -43,6 +37,6 @@
                            onclick="Array.from(document.getElementsByClassName('method')).forEach((thisInput) => { thisInput.value='DELETE'; })"/><br/>
                 </form>
             </c:forEach>
-        
+        </div>
     </body>
 </html>
