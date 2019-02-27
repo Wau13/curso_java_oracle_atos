@@ -26,6 +26,7 @@ public class BaseDBUsuario implements IUsuarioDAO{
     protected String conexionDB;
     protected String usuarioDB;
     protected String passwordDB;
+    protected String tablaDB;
     
    
 
@@ -35,7 +36,7 @@ public class BaseDBUsuario implements IUsuarioDAO{
         try (Connection con = DriverManager.getConnection(
                 conexionDB, usuarioDB, passwordDB )) {
             
-            String squery  = "INSERT INTO usuario (Nombre, Edad, email, password) VALUES(" 
+            String squery  = "INSERT INTO "+ tablaDB +" (Nombre, Edad, email, password) VALUES(" 
                         + "'" + persona.getNombre() + "', "
                         + persona.getEdad() + ", '" + persona.getEmail() + "', '" + persona.getPassword() + "')";
             Statement stmt = con.createStatement();
@@ -52,7 +53,7 @@ public class BaseDBUsuario implements IUsuarioDAO{
                 conexionDB, usuarioDB, passwordDB )) {
             
             ArrayList<Usuario> listaUsuarios = new ArrayList<>();
-            String squery = "SELECT id, nombre, edad, email, password FROM Usuario";
+            String squery = "SELECT id, nombre, edad, email, password FROM "+ tablaDB +"";
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery(squery);
             while (res.next()) { 
@@ -76,7 +77,7 @@ public class BaseDBUsuario implements IUsuarioDAO{
                 conexionDB, usuarioDB, passwordDB )) {
             
             Usuario usu = null;
-            String squery = "SELECT nombre, edad, email, password FROM Usuario WHERE Id=" + id;
+            String squery = "SELECT nombre, edad, email, password FROM "+ tablaDB +" WHERE Id=" + id;
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery(squery);
             if (res.next()) { 
@@ -99,7 +100,7 @@ public class BaseDBUsuario implements IUsuarioDAO{
                 conexionDB, usuarioDB, passwordDB )) {
             
             Usuario usu = null;
-            String squery = "SELECT id, nombre, edad, email, password FROM Usuario WHERE email = '" + email + "'";
+            String squery = "SELECT id, nombre, edad, email, password FROM "+ tablaDB +" WHERE email = '" + email + "'";
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery(squery);
             if (res.next()) { 
@@ -121,7 +122,7 @@ public class BaseDBUsuario implements IUsuarioDAO{
     public boolean eliminar(String email) {
         try (Connection con = DriverManager.getConnection(
                 conexionDB, usuarioDB, passwordDB )) {
-            String squery = "DELETE FROM usuario WHERE email=?";
+            String squery = "DELETE FROM "+ tablaDB +" WHERE email=?";
             PreparedStatement stmt = con.prepareStatement(squery);
             stmt.setString(1, email);
             stmt.executeUpdate();
@@ -137,7 +138,7 @@ public class BaseDBUsuario implements IUsuarioDAO{
     public boolean modificar(Usuario usuario) {
         try (Connection con = DriverManager.getConnection(
                 conexionDB, usuarioDB, passwordDB )) {
-            String squery = "UPDATE usuario SET nombre=?, edad=?, email=?, password=? WHERE id=?";
+            String squery = "UPDATE "+ tablaDB +" SET nombre=?, edad=?, email=?, password=? WHERE id=?";
             PreparedStatement stmt = con.prepareStatement(squery);
             stmt.setString(1, usuario.getNombre());
             stmt.setInt(2, usuario.getEdad());
