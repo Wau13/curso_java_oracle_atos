@@ -32,45 +32,45 @@ public class UsuariosServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-                
+
         ServicioUsuarios.Resultado resultado;
         String strId = request.getParameter("id");
-        int id = strId != null && !strId.isEmpty()?  Integer.parseInt(strId) : -1;
+        int id = strId != null && !strId.isEmpty() ? Integer.parseInt(strId) : -1;
         String nom = request.getParameter("nombre");
         String edad = request.getParameter("edad");
         String p_email = request.getParameter("email");
         String p_password = request.getParameter("password");
-        
+
         String ck_email = Utilidades.getCookie(request, "email");
         String ck_password = Utilidades.getCookie(request, "password");
-        
-        //Seleccionar los campos de logn de los parametros o de las cookies
-        
+
+        // Seleccionar los campos login de los parámetros o de las cookies
         String email = p_email != null && !p_email.isEmpty() ? p_email : ck_email;
-        String password = p_password != null && !p_password.isEmpty() ? p_password : ck_password;
-        
+        String password = p_password != null && !p_password.isEmpty()
+                ? p_password : ck_password;
+
         Usuario usuario = null;
-        
-        if(ServicioUsuarios.getInstancia().validarLoginUsuario(email, password) == ServicioUsuarios.Resultado.Ok){
-           usuario = ServicioUsuarios.getInstancia().obtenerUno(email);
-           request.getSession().setAttribute("usuario", usuario);
-           // Usuario se esta logueando bien
-           Cookie cookie_email = new Cookie("email", email);
-           Cookie cookie_password = new Cookie("password", password);
-           response.addCookie(cookie_email);
-           response.addCookie(cookie_password);
-           
-           
-           switch (request.getMethod()) {
-               case "GET":
-                       request.getSession().setAttribute("listaUsuarios", ServicioUsuarios.getInstancia().obtenerTodos());
-                       request.getRequestDispatcher("listar.jsp").forward(request, response);
-                       request.getRequestDispatcher("index.jsp").forward(request, response);
-                   break;
-                case "POST":
-                    String metodo = request.getParameter("method");//input hidden
-                    switch(metodo){
-                        case "PUT":
+        if (ServicioUsuarios.getInstancia().validarLoginUsuario(email, password)
+                == ServicioUsuarios.Resultado.Ok) {
+            usuario = ServicioUsuarios.getInstancia().obtenerUno(email);
+            request.getSession().setAttribute("usuario", usuario);
+            // Usuario se está loquendo bien; creamos y enviamos las cookies al navegador
+            Cookie cookie_email = new Cookie("email", email);
+            Cookie cookie_password = new Cookie("password", password);
+            response.addCookie(cookie_email);
+            response.addCookie(cookie_password);
+            switch (request.getMethod()) {
+                case "GET":
+                    if (email.isEmpty()) {  // Si no pide usuario, listamos todos
+                        request.getRequestDispatcher("listar.jsp").forward(request, response);
+                    } else {
+                        request.getRequestDispatcher("index.jsp").forward(request, response);
+                    }
+                    break;
+                case "POST":    // Simulación servicio web
+                    String metodo = request.getParameter("method"); // Campo INPUT hidden
+                    switch (metodo) {
+                        case "PUT": // Modificar
                             ServicioUsuarios.getInstancia().modificar(id, nom, edad, email, password);
                             request.getRequestDispatcher("listar.jsp").forward(request, response);
                             break;
@@ -79,37 +79,35 @@ public class UsuariosServlet extends HttpServlet {
                             request.getRequestDispatcher("listar.jsp").forward(request, response);
                             break;
                     }
-                   break;   
-           }
-        } else { //Cuando no ha hecho el login
+                    break;
+            }
+        } else { // SIN Login
             request.getSession().setAttribute("usuario", usuario);
-            switch(request.getMethod()){
-                case "POST":
+            switch (request.getMethod()) {
+                case "POST":    // Es el registro, viene de registrarse.jsp
                     resultado = ServicioUsuarios.getInstancia().add(nom, edad, email, password);
-                    switch(resultado){
+                    switch (resultado) {
                         case Ok:
                             usuario = ServicioUsuarios.getInstancia().obtenerUno(email);
-                            request.getSession().setAttribute("usuario", usuario); //Guardamos un java bean
+                            request.getSession().setAttribute("usuario", usuario);  // Guardamos JavaBean
                             request.getRequestDispatcher("registrado.jsp").forward(request, response);
                             break;
                         case CamposMal:
                             request.getSession().setAttribute("mensajeError", "Los campos no son correctos");
-                            request.getRequestDispatcher("registrase.jsp").forward(request, response);
+                            request.getRequestDispatcher("registrarse.jsp").forward(request, response);
                             break;
                         case ErrorDB:
                             request.getSession().setAttribute("mensajeError", "Error en BBDD");
-                            request.getRequestDispatcher("registrase.jsp").forward(request, response);
+                            request.getRequestDispatcher("registrarse.jsp").forward(request, response);
                             break;
                     }
                     break;
-                default://Si intentamos logueranos o cualquier otra cosa y el login ha fallado...
-                    request.getSession().setAttribute("mensajeError", "Login invalido");
+                default:    // SI intenmos loguearnos, o cualquier otra cosa y el login ha fallado...
+                    request.getSession().setAttribute("mensajeError", "Login inválido");
                     request.getRequestDispatcher("login.jsp").forward(request, response);
                     break;
             }
-            
         }
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

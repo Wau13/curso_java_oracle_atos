@@ -9,7 +9,7 @@
     <body>
         <%@include file="header.jsp" %>
         <h1>Formulario JSP de registro</h1> 
-        <form name="form1" method="post" action="./usuarios.do" >
+        <form name="form1" method="post" action="./usuarios.do">
 
             <table border="1">
                 <tr><td>Nombre:</td><td>
@@ -21,7 +21,7 @@
                 <tr><td>Contraseña</td><td>
                     <input type="password" name="password" id="password" value=""/>  </td></tr> 
             </table>
-            <input type="submit" value="Registrar"/>
+            <input type="submit" value="Regisrar"/>
         </form>
     </body>
 </html>
