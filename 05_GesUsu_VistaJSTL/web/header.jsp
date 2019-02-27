@@ -16,6 +16,7 @@
             <jsp:getProperty property="email" name="usuario"/>
         </jsp:useBean>
         <a href="usuarios.do">Listar</a>
+        <a href="listarsql.jsp">SQL</a>
         <a href="eliminar.jsp">Eliminar</a>
         <form action="usuarios.do" style="display: inline-block">
             <input id="email" name="email" type="hidden" value="LOGOUT"/>
